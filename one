@@ -1,0 +1,95 @@
+import React, { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { FileText, X } from "lucide-react";
+
+const TechTransferDashboard = () => {
+  const location = useLocation();
+  const [openModal, setOpenModal] = useState(false);
+
+  const statusData = [
+    { stream: "PR&D", totalRequired: 9, yetToInitiate: 1, draft: 1, review: 7, approved: 2 },
+    { stream: "AR&D", totalRequired: 10, yetToInitiate: 4, draft: 4, review: 1, approved: 1 },
+    { stream: "PE", totalRequired: 2, yetToInitiate: 0, draft: 2, review: 0, approved: 0 },
+  ];
+
+  const navLinkClass = (path) =>
+    `flex items-center gap-3 px-3 py-2 rounded-lg mb-1 transition-colors cursor-pointer ${
+      location.pathname === path
+        ? "text-blue-600 bg-blue-50 font-medium"
+        : "text-gray-600 hover:bg-gray-50"
+    }`;
+
+  return (
+    <div className="flex h-screen bg-gray-50">
+
+      {/* Sidebar */}
+      <div className="w-64 bg-white border-r border-gray-200 flex flex-col">
+        <nav className="flex-1 p-4">
+          <div
+            className={navLinkClass("/document-tracker")}
+            onClick={() => setOpenModal(true)}
+          >
+            <FileText className="w-5 h-5" />
+            <span className="font-medium">Document Tracker</span>
+          </div>
+        </nav>
+      </div>
+
+      {/* Full Screen Modal Overlay */}
+      {openModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 px-4">
+
+          {/* Modal Box */}
+          <div className="bg-white rounded-xl shadow-xl max-w-4xl w-full p-6 relative">
+
+            {/* Close Button */}
+            <button
+              onClick={() => setOpenModal(false)}
+              className="absolute top-4 right-4 text-gray-600 hover:text-black"
+            >
+              <X className="w-6 h-6" />
+            </button>
+
+            {/* Modal Title */}
+            <h1 className="text-2xl font-bold text-gray-900 mb-6 text-center">
+              Status Breakdown
+            </h1>
+
+            {/* Table */}
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b border-gray-200">
+                    <th className="px-6 py-3 text-left text-sm font-semibold">Stream</th>
+                    <th className="px-6 py-3 text-left text-sm font-semibold">Total Required</th>
+                    <th className="px-6 py-3 text-left text-sm font-semibold">Yet to Initiate</th>
+                    <th className="px-6 py-3 text-left text-sm font-semibold text-orange-600">Draft</th>
+                    <th className="px-6 py-3 text-left text-sm font-semibold text-blue-600">Review</th>
+                    <th className="px-6 py-3 text-left text-sm font-semibold text-green-600">Approved</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {statusData.map((row, index) => (
+                    <tr key={index} className="border-b border-gray-100 hover:bg-gray-50">
+                      <td className="px-6 py-3 text-sm font-medium">{row.stream}</td>
+                      <td className="px-6 py-3 text-sm">{row.totalRequired}</td>
+                      <td className="px-6 py-3 text-sm">{row.yetToInitiate}</td>
+                      <td className="px-6 py-3 text-sm font-semibold text-orange-600">{row.draft}</td>
+                      <td className="px-6 py-3 text-sm font-semibold text-blue-600">{row.review}</td>
+                      <td className="px-6 py-3 text-sm font-semibold text-green-600">{row.approved}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+        </div>
+      )}
+
+    </div>
+  );
+};
+
+export default TechTransferDashboard;
