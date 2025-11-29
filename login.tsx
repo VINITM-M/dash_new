@@ -15,10 +15,6 @@ import { apiUrls } from '../../utilities/urls';
 
 const Login = () => {
   const { instance } = useMsal(); // Access MSAL instance
-  // Default email to use for automatic sign-in (change if needed)
-  const DEFAULT_SIGNIN_EMAIL = 'vinithm@aurigeneservices.com';
-  // When true, the page will automatically trigger sign-in on load
-  const AUTO_SIGNIN_ON_LOAD = true;
 
   const handleSweetAlert = (
     titleData: string,
@@ -177,23 +173,17 @@ const Login = () => {
 
     try {
       setIsSigningIn(true);
-      // const loginResponse = await instance.loginPopup(); // Initiates the sign-in process
-      
-      
-      const loginResponse = {
-        accessToken: 'dummy-access-token',
-        idTokenClaims: {
-          preferred_username: DEFAULT_SIGNIN_EMAIL,
-        },
-      };
 
-      
+
+
+      const loginResponse = await instance.loginPopup(); // Initiates the sign-in proces
+
       console.log('loginResponse', loginResponse);
-
 
       //accessToken
       sessionStorage.setItem('ADtoken', loginResponse.accessToken);
       localStorage.setItem('ADtoken', loginResponse.accessToken);
+      
       if (loginResponse) {
         const Uname = loginResponse.idTokenClaims;
         if (
@@ -265,15 +255,6 @@ const Login = () => {
   const PostTask = async (status: any) => {
     console.log('status', status);
   };
-
-  // Optionally auto-trigger sign-in when the login page loads
-  useEffect(() => {
-    if (AUTO_SIGNIN_ON_LOAD) {
-      // call handleSignIn to sign in automatically
-      handleSignIn();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   return (
     <>
